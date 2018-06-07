@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="chatApp">
+
+<head>
+  <!-- <base href="/"> -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Your Learning Chat Advisor</title>
+  <link rel="shortcut icon" href="/imgs/chat-icon.svg" />
+  <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/bower_components/angular-smilies/dist/angular-smilies-embed.min.css">
+  <script type="text/javascript">
+      var bodyOnLoad = function() {
+        var host = window.location.hostname;
+        var login = "https://yourlearningtest.w3bmix.ibm.com/setToken.jsp?redirect=";
+        var eapim_client_id = "71dfb756-a868-4ed2-aa3a-12bf86352b74";
+        var eapim_client_secret = "yB8lB6jB8hH4mY3pO6pN2uL7tR1tJ3vV3cT0nP0jQ7hH1aX1kF";
+        var check_url = "https://w3-dev.api.ibm.com/learning/test/v1/jwt/validatetoken";
+        var eapim = "https://w3-dev.api.ibm.com/learning/test";
+        var type = "IBM Test";
+        var getConfig = "https://w3-dev.api.ibm.com/learning/test/v1/config/";
+        var mapping = {};
+
+        var SLOW_RESPONSE = 5000;
+        var SERVICE_TIMEOUT = 10000;
+
+        var checkIfAuthenticated = function() {
+            var method = "GET";
+            var url = check_url;
+            var xhttp = new XMLHttpRequest();
+            var visitorName = '';
+            var visitorId = '';
+            var visitorEmail = '';
+            xhttp.onreadystatechange = function() {
+              if (xhttp.readyState == 4) {
+              try {
+                var json = JSON.parse(xhttp.responseText);
+                window.visitorName = json.name;
+                window.visitorId = json.tenantId;
+                window.visitorEmail = json.mail;
+              }
+              catch(err) {
+                window.error = true;
+                console.log("err in index:::", err);
+                var url = window.location.origin;
+                //console.log("hostname::::", url+'/#!/error');
+                $(location).attr('href', url+'/#!/error');
+
+                var json = {};
+                json["message"] = xhttp.responseText;
+              }
+
+               if (xhttp.status === 401) {
+                    var str = login + window.location.href + "%3Ftype=" +  'dev';
+                    window.location.href = str;
+                    console.log("str:::::", str);
+               } else if (xhttp.status === 200) {
+                    // set cookie to current domain
+                    var expDate = new Date(json.expirationDate);
+                    var cookie = "LearningToken=" + json.token + "; expires=" + expDate.toUTCString();
+                    document.cookie=cookie;
+                    console.debug(cookie);
+                    var str = '';
+               } else {
+                    if (json && json.message) {
+                      document.getElementById("authStatus").innerHTML = "Not authenticated / error: " + json.message;
+                    } else {
+                      document.getElementById("authStatus").innerHTML = "Not authenticated / error";
+                    }
+                  }
+                }
+             };
+            xhttp.open(method, url, true);
+            xhttp.setRequestHeader("X-IBM-Client-Id", eapim_client_id);
+            xhttp.setRequestHeader("X-IBM-Client-Secret", eapim_client_secret);
+            xhttp.withCredentials = true;
+            xhttp.timeout = SERVICE_TIMEOUT; // Set timeout
+            xhttp.ontimeout = function () {
+              console.debug('timeout');
+            };
+            xhttp.send();
+        }
+        checkIfAuthenticated();
+      }
+  </script>
+</head>
+
+<body onload="bodyOnLoad()">
+
+<div ng-view></div>
+
+<script src="/js/lib/jquery/jquery-2.0.3.min.js"></script>
+
+
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/angular-route/angular-route.js"></script>
+<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="/bower_components/angular-smilies/dist/angular-smilies.min.js"></script>
+<script src="/bower_components/jspdf/dist/jspdf.min.js"></script>
+<script src="https://lpcdn.lpsnmedia.net/api/chat/public/lpChat.min.js"></script>
+
+<script src="/js/app.js"></script>
+<script src="/js/controllers/chat.js"></script>
+<script src="/js/controllers/liveChatCtrl.js"></script>
+<script src="/js/controllers/errorCtrl.js"></script>
+<script src="/js/factories/conversationService.js"></script>
+<script src="/js/factories/liveAgentService.js"></script>
+<script src="/js/factories/printPdfFactory.js"></script>
+<script src="/js/factories/savePdfFactory.js"></script>
+<script src="/js/factories/checkAuthFactory.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js?ver=1.3.2"></script> -->
+
+</body>
+</html>

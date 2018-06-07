@@ -1,0 +1,95 @@
+<div ng-show="chatRoom" class="chat-advisor-chat-container">
+  <div class="row chat-advisor-chat-room">
+
+    <div class="col-sm-12 chat-advisor-room-header">
+      <div>
+        <div class="chat-advisor-title">Your Learning</div>
+        <div class="chat-advisor-subtitle">Chat Advisor</div>
+      </div>
+      <div class="float-right">
+        <button type="button" class="btn liveChatBtn" ng-click="liveChat()">Live Chat</button>
+      </div>
+    </div><!-- end .chat-advisor-room-header -->
+    <div class="col-sm-12">
+      <div class="chat-advisor-message-content watermark" id="chat-message-content" ng-show="chatMessages">
+        <!-- watermark  place it in the above class for watermark  -->
+        <div class="dynamically-content clearfix">
+          <div class="row content">
+            <div class="col-sm-12">
+              <p class="chat-advisor-pTag">Welcome to Your Learning <strong>Chat Advisor<a href ng-click="helpTxtWcs('About Chat Advisor')"><img src="../imgs/help.svg" style="height: 18px;"alt=""></a></strong></p>
+              <p class="chat-advisor-pTag">I can help answer your questions related to Your Learning. For example, you can ask <a href><i ng-click="quickQuestion(1)">Where are my completed courses?</i></a> or <a href ng-click="quickQuestion(2)"><i>Why haven't I received my badge yet?</i></a> or <a href ng-click="quickQuestion(3)"><i>Show me courses about Blockchain</i></a><br></p>
+                <p class="chat-advisor-pTag">And remember, you can always reach out to a human by clicking the Live Chat button on the top right.</p>
+                <!-- <p class="chat-advisor-pTag">If you wish to chat with a person, please click on the <strong>Live Chat</strong> button on the top right at any time.</p> -->
+              <!-- <p>More info <a href ng-click="helpTxtWcs('About Chat Advisor')"><img src="../imgs/help.svg" style="height: 18px;"alt=""></a></p> -->
+            </div>
+          </div>
+        </div>
+        <br>
+        <div ng-repeat="allmessage in messages">
+          <div class="chat-advisor-message-history">
+            <div class="chat-advisor-send-message">
+              <p>{{allmessage.input.text}}</p>
+            </div>
+            <div class="chat-advisor-receive-message">
+              <img src="./imgs/watson.svg" alt="watson">
+              <div class="chat-advisor-history">
+                <div ng-repeat="response in allmessage.output.text">
+                  <div ng-bind-html="TrustDangerousSnippet(response)"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div ng-if="transferToAgent">
+            <div ng-controller="LiveChatCtrl" ng-init="initDemo()">
+              <div class="chat-advisor-transferChat" id="transferToAgentDiv" ng-show="waitTime != -1 || waitTime != 42  ">
+                <p>Would you like to transfer the chat to a Live Agent?</p>
+                <div class="row">
+                  {{waitTime}}{{getEstimatedAgentTime()}}
+                  <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+                    <button class="btn btn-primary noBtn" type="button" name="button" ng-click="liveChat()">Transfer</button>
+                    <a class="noBtn" style="text-decoration: underline" type="button" name="button" ng-click="closeTransferQuestion()">No thanks</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div> -->
+        <!-- end .chat-advisor-transferChat -->
+      </div><!-- end .chat-advisor-message-content -->
+
+      <div class="row chat-advisor-parent-wrapper" ng-if="flagPrint">
+        <span class="chat-advisor-save col-xs-6 col-sm-6 col-lg-6 col-md-5">
+          <figure class="embed chat-advisor-panel-image">
+            <img src="./imgs/print-icon.svg" class="chat-advisor-printIcons" ng-click="printOutTranscript()" alt="Print Transcript">
+            <figcaption><b>Print Transcript</b></figcaption>
+          </figure>
+        </span>
+        <span class="chat-advisor-save col-xs-5 col-sm-5 col-lg-5 col-md-5">
+          <figure class="embed chat-advisor-panel-image">
+            <img src="./imgs/save.svg" class="chat-advisor-printIcons" ng-click="saveTranscript()" alt="Save Transcript">
+            <figcaption><b>Save Transcript</b></figcaption>
+          </figure>
+        </span>
+        <span class="chat-advisor-save col-xs-1 col-sm-1 col-lg-1 col-md-1">
+          <figure class="embed chat-advisor-panel-image"  ng-click="closePrintOptions()" style="margin-left: -20px;padding-bottom: 54px;">
+            <img src="./imgs/close.svg" class="chat-advisor-printIcons">
+          </figure>
+        </span>
+      </div><!-- end .chat-advisor-parent-wrapper -->
+
+      <div class="row chat-advisor-input">
+        <div class="col-sm-12 chat-advisor-input-div">
+          <!-- ng-hide="flagPrint != flagPrint" ng-click="printTranscript()"  put this in the div below for old deisgn -->
+          <div class="col-sm-2 col-lg-2 col-xs-2 col-xl-2" ng-hide="flagPrint != flagPrint" ng-click="printTranscript()">
+            <button class="btn chat-advisor-TranscriptBtn" type="button" name="button">Export Chat</button>
+
+          </div>
+          <div class="col-sm-10 col-lg-10 col-xs-10 col-xl-10">
+            <input type="text" class="chat-advisor-input-box form-control" placeholder="Type your question and press enter ..." ng-model="input.text" ng-keydown="sendMessage($event, input.text)" spellcheck="true" autofocus>
+          </div>
+        </div>
+      </div><!-- end .chat-advisor-input -->
+    </div><!-- end .col-sm-12 -->
+
+  </div><!-- end .chat-advisor-chat-room -->
+</div><!-- end .chat-advisor-chat-container -->

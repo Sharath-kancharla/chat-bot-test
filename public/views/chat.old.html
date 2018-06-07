@@ -1,0 +1,83 @@
+<div ng-show="chatRoom" class="chat-advisor-chat-container">
+  <div class="row chat-advisor-chat-room">
+
+    <div class="col-sm-12 chat-advisor-room-header">
+      <div>
+        <div class="chat-advisor-title">Your Learning Chat Advisor</div>
+        <div class="chat-advisor-description">Powered by IBM <strong>Watson Conversation</strong></div>
+      </div>
+      <div class="float-right">
+        <button class="btn btn-primary liveChatBtn" ng-click="liveChat()">Live Chat</button>
+      </div>
+    </div><!-- end .chat-advisor-room-header -->
+
+    <div class="col-sm-12">
+      <div class="chat-advisor-message-content" id="chat-message-content" ng-show="chatMessages">
+        <div class="dynamically-content clearfix">
+          <div>
+            <img src="./imgs/conversation.svg">
+          </div>
+          <div class="row content">
+            <div class="col-sm-12">
+              <p class="chat-advisor-pTag">Welcome to Your Learning <strong>Chat Advisor</strong>!</p><br>
+              <p class="chat-advisor-pTag">I can help you with your question related to Your Learning. Or just say "help".</p><br>
+              <p class="chat-advisor-pTag">If you wish to chat with a person, please click on the <strong>Live Chat</strong> button on the top right at any time.</p>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div ng-repeat="allmessage in messages">
+          <div class="chat-advisor-message-history">
+            <div class="chat-advisor-send-message">
+              <p>{{allmessage.input.text}}</p>
+            </div>
+            <div class="chat-advisor-receive-message">
+              <img src="./imgs/conversation.svg">
+              <div class="chat-advisor-history">
+                <div ng-repeat="response in allmessage.output.text">
+                  <div ng-bind-html="TrustDangerousSnippet(response)"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end .chat-advisor-message-content -->
+
+      <div class="chat-advisor-transferChat" ng-show="!chatMessages">
+        <p>Would you like to transfer the chat to a Live Agent?</p>
+        <div class="row">
+          <div class="col-sm-6 col-xs-6 col-md-6 col-lg-6">
+            <button class="btn btn-primary" type="button" name="button" ng-click="liveChat()">Yes</button>
+            <button class="btn btn-default" type="button" name="button" ng-click="">No</button>
+          </div>
+        </div>
+      </div><!-- end .chat-advisor-transferChat -->
+
+      <div class="row chat-advisor-parent-wrapper" ng-if="flagPrint">
+        <span class="chat-advisor-save col-xs-6 col-sm-6 col-lg-6 col-md-6">
+          <figure class="embed chat-advisor-panel-image">
+            <img src="./imgs/print-icon.svg" class="chat-advisor-printIcons" ng-click="printOutTranscript()" alt="Print-Transcript">
+            <figcaption>Print Transcript</figcaption>
+          </figure>
+        </span>
+        <span class="chat-advisor-save col-xs-6 col-sm-6 col-lg-6 col-md-6">
+          <figure class="embed chat-advisor-panel-image">
+            <img src="./imgs/save.svg" class="chat-advisor-printIcons" ng-click="saveTranscript()" alt="Save-Transcript">
+            <figcaption>Save Transcript</figcaption>
+          </figure>
+        </span>
+      </div><!-- end .chat-advisor-parent-wrapper -->
+
+      <!-- <div class="row chat-advisor-footer"> -->
+        <div class="row chat-advisor-input">
+          <div class="col-sm-12 col-xs-12 chat-advisor-input-div">
+            <i class="glyphicon glyphicon-plus" aria-hidden="true" ng-click="printTranscript()"  ng-if="flagPrint != true"></i>
+            <i class="glyphicon glyphicon-minus" aria-hidden="true"  ng-click="printTranscript()"  ng-if="flagPrint"></i>
+            <input type="text" class="form-control" placeholder="Type your message..."  ng-model="input.text" ng-keydown="sendMessage($event, input.text)" spellcheck="true" autofocus>
+          </div>
+        </div>
+      <!-- </div> --><!-- end .chat-advisor-footer -->
+    </div><!-- end .col-sm-12 -->
+
+  </div><!-- end .chat-advisor-chat-room -->
+</div><!-- end .chat-advisor-chat-container -->

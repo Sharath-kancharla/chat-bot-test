@@ -1,0 +1,151 @@
+<div ng-hide="chatRoom"  class="chat-advisor-chat-container">
+  <div class="row chat-advisor-chat-room">
+
+		<div class="col-sm-12 chat-advisor-room-header">
+			<div>
+				<div class="chat-advisor-title">Your Learning</div>
+        <div class="chat-advisor-liveChat-subtitle">Live Chat</div>
+			</div>
+      <div class="float-right">
+        <button type="button" id="watsonChatBtn" class="btn btn-default" ng-click="backBtn()">Watson Chat</button>
+			  <button type="button" id="endChat" class="btn btn-danger" ng-click="endChat()" disabled>End Chat</button>
+      </div>
+		</div><!-- end .chat-advisor-room-header -->
+    <div class="col-sm-12">
+      <div class="chat-advisor-message-content" id="chat-message-content" ng-show="chatContent">
+        <div class="dynamically-content clearfix" ng-show="availabilityStatus == 32">
+          <div>
+            <img src="./imgs/conversation-blue.svg" alt="">
+          </div>
+          <div class="row content">
+            <div class="col-sm-12">
+              <p class="chat-advisor-pTag">There are {{agentAvailability}} available at this time. Agents are available Monday through Friday in all timezones.</p>
+              <p class="chat-advisor-pTag">For additional assistance, please refer to the <a href="https://superzero.w3ibm.mybluemix.net/" target="_blank">SuperZero</a> site for help documentation or to submit a ticket.</p>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div ng-repeat="allmessage in chatHistory track by $index">
+          <div class="chat-advisor-message-history">
+            <div class="chat-advisor-receive-message" ng-show="{{allmessage[0].source != 'visitor'}}">
+              <img src="./imgs/conversation-blue.svg">
+              <div class="chat-advisor-history">
+                <div class="chat-advisor-chatRep" ng-bind-html="TrustDangerousSnippet(allmessage[0].text)"></div>
+              </div>
+            </div>
+            <div class="chat-advisor-send-message" ng-show='allmessage[0].source == "visitor"'>
+              <p ng-if="allmessage">{{allmessage[0].text}}</p>
+             </div>
+           </div>
+         </div>
+       </div><!-- end .chat-advisor-message-content -->
+
+       <!-- <div ng-show="agentEndsChat" ng-class="chat-advisor-agentEndsChat">
+        <p style="position: absolute; bottom: 0px; margin-left: 55px;"><i>The agent has ended the chat</i></p>
+       </div> -->
+
+       <div id="surveyBlock" class="surveyContainer">
+        <div class="chat-advisor-surveyQuestions" ng-show="survey">
+          <div>
+            <p>{{exitSurvey.survey.header}}</p>
+          </div>
+          <hr>
+
+          <div class="chat-advisor-surveyRating" ng-show="surveyRating" id="surveyRating">
+            <p>{{exitSurvey.survey.questions.question[0].label}}</p>
+            <div class="form-group">
+              <div ng-repeat="rating in exitSurvey.survey.questions.question[0].entry | orderBy:'-'" style="float: left; padding-right: 10px;">
+                <div class="badge" id="{{rating.displayValue.split(' ')[0]}}"
+                ng-model="myRating" ng-click="selectRating(rating.value, rating.logic.showLogicId[0])">{{rating.displayValue.split(' ')[0]}}</div>
+                <!-- <input name="group100" type="radio" value="{{rating.value}}" id="{{rating.displayValue.split(' ')[0]}}" ng-model="myRating" ng-click="selectRating(myRating, rating.logic.showLogicId[0])"> <label for="{{rating.displayValue.split(' ')[0]}}">{{rating.displayValue.split(' ')[0]}}</label></input> -->
+                <!-- <input name="group100" type="radio" value="{{rating.value}}" id="{{rating.displayValue.split(' ')[0]}}" ng-model="myRating" ng-click="selectRating(myRating, rating.logic.showLogicId[0])"> <label for="{{rating.displayValue.split(' ')[0]}}">{{rating.displayValue.split(' ')[0]}}</label></input> -->
+
+              </div>
+            </div>
+          </div>
+
+          <div ng-show="npsFeedbackQuestion">
+            <p style="clear: both; padding-top: 10px;">{{npsFeedbackQuestion.label}}</p>
+            <textarea name="name" ng-model="feedbackComment" ng-change="userFeedback(feedbackComment)"></textarea>
+            <div class="chat-advisor-cancelSubmitBtns">
+              <a class="btn btn-default" href="#">Cancel</a>
+              <button type="button" class="btn liveChatBtn" name="button" ng-click="surveyFeedback(myRating)">Submit</button>
+            </div>
+          </div>
+        </div><!-- .chat-advisor-surveyQuestions -->
+      </div><!-- end .surveyContainer -->
+
+      <div class="row">
+        <div class="col-sm-12" ng-show="agentIsTyping">
+          <p style="position: absolute; bottom: 0px; margin-left: 50px;"><i class="chat-advisor-agentTyping">Agent is typing ...</i></p>
+        </div>
+        <div class="col-sm-12" ng-show="endSession">
+          <p style="position: absolute; bottom: 0px; margin-left: 50px;">Your chat session has ended!</p>
+        </div>
+      </div><!-- end .row -->
+
+      <div class="row chat-advisor-parent-wrapper" ng-show="flagPrint">
+        <span class="chat-advisor-save col-xs-6 col-sm-6">
+          <figure class="embed chat-advisor-panel-image">
+            <img src="./imgs/print-icon.svg" class="chat-advisor-printIcons" ng-click="printOutTranscriptAgent()" alt="Print-Transcript">
+            <figcaption><b>Print Transcript</b></figcaption>
+          </figure>
+        </span>
+
+        <span class="chat-advisor-save col-xs-5 col-sm-5">
+          <figure class="embed chat-advisor-panel-image">
+            <img src="./imgs/save.svg" class="chat-advisor-printIcons" ng-click="saveTranscriptAgent()" alt="Save-Transcript">
+            <figcaption><b>Save Transcript</b></figcaption>
+          </figure>
+        </span>
+
+        <span class="chat-advisor-save col-xs-1 col-sm-1 col-lg-1 col-md-1">
+          <figure class="embed chat-advisor-panel-image"  ng-click="closePrintOptions()" style="margin-left: -20px;padding-bottom: 54px;">
+            <img src="./imgs/close.svg" class="chat-advisor-printIcons">
+          </figure>
+        </span>
+      </div><!-- end .chat-advisor-parent-wrapper -->
+
+      <div class="row chat-advisor-input">
+        <div id="chat-advisor-input-div" class="col-sm-12 chat-advisor-input-div">
+          <div class="col-sm-2 col-lg-2 col-xs-2 col-xl-2" ng-hide="flagPrint != flagPrint" ng-click="printTranscript()">
+            <button class="btn chat-advisor-TranscriptBtn" type="button" name="button">Export Chat</button>
+          </div>
+          <div class="col-sm-10 col-lg-10 col-xs-10 col-xl-10">
+            <input id="inputTextBox" type="text" class="chat-advisor-input-box form-control" placeholder="Type your question and press enter ..."  ng-model="visitorMessage" ng-keydown="sendLine($event, visitorMessage); setVisitorTyping()" spellcheck="true" autofocus disabled>
+          </div>
+        </div>
+      </div><!-- end .chat-advisor-input -->
+    </div><!-- end .col-sm-12 -->
+
+    <!-- Modal -->
+      <div class="modal " id="myModal" role="dialog"><!-- modal dialog  -->
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" ng-show="connectionStatus == 4">
+              <p>Are you sure you want to switch to Watson Chat? This will end the chat request to the live agent.</p>
+            </div>
+            <div class="modal-body" ng-show="connectionStatus != 4">
+              <p>Are you sure you want to switch to Watson Chat? This will end your Live Chat session and will ask for your feedback.</p>
+            </div>
+            <div class="modal-footer row">
+              <div class="col-xs-6 col-sm-6">
+                <button type="button" class="btn btn-lg btn-default chat-advisor-modal-yes" ng-click="transferToWatson()" data-dismiss="modal">Yes</button>
+              </div>
+              <div class="col-xs-6 col-sm-6">
+                <button type="button" class="btn btn-lg btn-default chat-advisor-modal-no" data-dismiss="modal">No</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- end of modal dialog  -->
+
+
+  </div><!-- end .chat-advisor-chat-room -->
+</div><!-- end .chat-advisor-chat-container -->

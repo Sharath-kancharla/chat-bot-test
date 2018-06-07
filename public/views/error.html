@@ -1,0 +1,40 @@
+
+<div class="chat-advisor-chat-container">
+  <div class="row chat-advisor-chat-room">
+
+    <div class="col-sm-12 chat-advisor-room-header">
+      <div>
+        <div class="chat-advisor-title">Your Learning</div>
+        <div class="chat-advisor-subtitle">Chat Advisor</div>
+      </div>
+      <div class="float-right">
+        <button type="button" disabled class="btn liveChatBtn">Live Chat</button>
+      </div>
+    </div><!-- end .chat-advisor-room-header -->
+    <div class="col-sm-12">
+      <div class="errorContainer watermark">
+        <div class="errorText">
+          <i>We are unable to authenticate you at this time. Please check your Intranet / VPN connection and try reloading the page.
+
+          If problems persist, please contact our support desk. <a href="https://superzero.w3ibm.mybluemix.net/">https://superzero.w3ibm.mybluemix.net/</a></i>
+
+        </div>
+      </div><!-- end .chat-advisor-message-content -->
+
+
+      <div class="row chat-advisor-input">
+        <div class="col-sm-12 chat-advisor-input-div">
+          <!-- ng-hide="flagPrint != flagPrint" ng-click="printTranscript()"  put this in the div below for old deisgn -->
+          <div class="col-sm-2 col-lg-2 col-xs-2 col-xl-2" ng-hide="flagPrint != flagPrint" ng-click="printTranscript()">
+            <button class="btn chat-advisor-TranscriptBtn" type="button" disabled name="button">Export Chat</button>
+
+          </div>
+          <div class="col-sm-10 col-lg-10 col-xs-10 col-xl-10">
+            <input type="text" class="chat-advisor-input-box form-control" disabled placeholder="Type your question and press enter ..." ng-model="input.text" ng-keydown="sendMessage($event, input.text)" spellcheck="true" autofocus>
+          </div>
+        </div>
+      </div><!-- end .chat-advisor-input -->
+    </div><!-- end .col-sm-12 -->
+
+  </div><!-- end .chat-advisor-chat-room -->
+</div><!-- end .chat-advisor-chat-container -->
